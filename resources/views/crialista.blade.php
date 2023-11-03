@@ -4,7 +4,14 @@
 
 @section('content')
             <div class="full-height-index d-flex">
-                <div class="container" style="margin-top: 10%;">
+                <div class="container mt-5">
+                    <div class="d-flex justify-content-center align-items-center">
+                        @if(session('error'))
+                            <div class="alert alert-danger col-md-5 mt-3">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                    </div>
                     <div class="d-flex" style="margin-left: 29%;">
                         <div class="cor-site rounded-pill mr-2 px-1" style="display: inline-block;"></div>
                         <h5 class="font-weight-bolder">Crie uma lista</span></h5>

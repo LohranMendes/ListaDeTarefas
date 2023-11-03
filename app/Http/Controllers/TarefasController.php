@@ -26,13 +26,22 @@ class TarefasController extends Controller
 
         $tarefas = Tarefas::where("lista_id", $listaId)->get();
 
-        $dataFormat = $this->exibirData($lista->data);
-        
-        if(!$lista){
-            abort(404);
+        try{
+            $dataFormat = $this->exibirData($lista->data);
+        }catch(\Exception $e){
+            return redirect()->route('mt')->with('sucess', 'A lista foi excluída.');
         }
 
-        return view("tarefa", compact('tarefas', 'lista', 'dataFormat'));
+        if($lista == null){
+            redirect()->intended(route('mt'))->with('error', 'A lista foi excluída ou não existe.');;
+        }
+
+        $idUser = Auth::id();
+        if($idUser == $lista->user_id){
+            return view("tarefa", compact('tarefas', 'lista', 'dataFormat'));
+        }
+
+        return redirect()->intended(route('mt'))->with('error', 'Não tem permissão para ver essa lista.');
     }
 
     public function tarefasPost(Request $request, $listaId){
@@ -64,6 +73,7 @@ class TarefasController extends Controller
     }
 
     public function listaPost(Request $request){
+
         $request->validate([
             "titulo" => 'required',
             "data"=>  'nullable'
@@ -71,7 +81,12 @@ class TarefasController extends Controller
 
         $banco['titulo'] = $request->titulo;
         $banco['user_id'] = Auth::id();
-        $banco['data'] = $request->data;
+        if($request->data >= date("Y-m-d")){
+            $banco['data'] = $request->data;
+        }
+        else{
+            return redirect()->intended(route('criaLista'))->with('error', 'A data inválida. Escolha uma data maior ou igual que a atual.');
+        }
 
         $lista = Lista::create($banco);
         
@@ -79,8 +94,12 @@ class TarefasController extends Controller
             return redirect()->intended(route('tarefas', ['id' => $lista->id]))->with('sucess', 'A lista foi criada com sucesso.');
         }
 
-        return redirect()->intended(route('criaLista'))->with('error', 'Ocorreu um erro na criação da lista. Tente novamente.');
-        
+        if(Auth::check()){
+            return redirect()->intended(route('criaLista'))->with('error', 'Ocorreu um erro na criação da lista. Tente novamente.');
+        }
+        else{
+            return redirect()->intended(route('login'))->with('error', "Sessão expirada. Faça login novamente");
+        }
     }
 
     public function listaAlter(Request $request, $listaId){
@@ -120,11 +139,11 @@ class TarefasController extends Controller
 
         if(!$lista){
             if(!$tarefa){
-                return redirect()->intended(route('tarefas', ['id' => $listaId]))->with('sucess', 'A lista foi deletada com sucesso.');
+                return redirect()->intended(route('mt'))->with('sucess', 'A lista foi deletada com sucesso.');
             }
         }
 
-        return redirect()->intended(route('home'))->with('error', 'Ocorreu um erro ao deletar a lista. Tente novamente.');
+        return redirect()->intended(route('tarefas', ['id' => $listaId]))->with('error', 'Ocorreu um erro ao deletar a lista. Tente novamente.');
     }
 
     public function tarefaEx($listaId, $tarefaId){

@@ -24,14 +24,14 @@ Route::post("/login", [LoginController::class,"login"])->name("loginPost");
 Route::get("/registro", [LoginController::class,"registroIndex"])->name("registro");
 Route::post("/registro", [LoginController::class,"registro"])->name("registroPost");
 
-Route::get("/logout", [LoginController::class,"Desconectar"])->name("logout");
+Route::get("/logout", [LoginController::class,"Desconectar"])->name("logout")->middleware("auth");
 
-Route::get("/minhastarefas", [TarefasController::class,"mtIndex"])->name("mt");
+Route::get("/minhastarefas", [TarefasController::class,"mtIndex"])->name("mt")->middleware("auth");
 
-Route::get("/criarLista", [TarefasController::class, "index"])->name("criaLista");
-Route::post("/criarLista", [TarefasController::class,"listaPost"])->name("listaPost");
+Route::get("/criarLista", [TarefasController::class, "index"])->name("criaLista")->middleware("auth");
+Route::post("/criarLista", [TarefasController::class,"listaPost"])->name("listaPost")->middleware("auth");
 
-Route::get("/tarefa/{id}", [TarefasController::class,"tarefaIndex"])->name("tarefas");
+Route::get("/tarefa/{id}", [TarefasController::class,"tarefaIndex"])->name("tarefas")->middleware("auth");
 Route::post("/tarefa/{id}",[TarefasController::class,"tarefasPost"])->name("tarefaPost");
 Route::put("/tarefa/{id}", [TarefasController::class,"listaAlter"])->name("listaAlter");
 Route::delete("/tarefa/{id}", [TarefasController::class, "listaEx"])->name("listaEx");
