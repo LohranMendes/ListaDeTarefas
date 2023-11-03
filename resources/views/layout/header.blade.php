@@ -23,8 +23,10 @@
             </div>
         </div>
     @else
-        <div class="text-end px-5">
-            <a class="text-nav btn btn-outline-light" href="{{route("login")}}"><b>Login</b></a>
-        </div>
+        @if(Request::url() != route('login'))
+            <div class="text-end px-5">
+                <a class="text-nav btn btn-outline-light" href="{{route("login")}}"><b>Login</b></a>
+            </div>
+        @endif
     @endif
 </nav>

@@ -48,8 +48,12 @@ class TarefasController extends Controller
         $banco['status'] = 0;
         $banco['lista_id'] = $listaId; 
 
-        if(Tarefas::where('lista_id', $listaId)->count() < 9){
+        if(Tarefas::where('lista_id', $listaId)->count() <= 9){
             $tarefas = Tarefas::create($banco);
+        }
+
+        if(Tarefas::where('lista_id', $listaId)->count() > 9){
+            return redirect()->intended(route('tarefas', ['id' => $listaId]))->with('error', 'A lista já possui 10 tarefas. Não é possível criar mais.');
         }
 
         if($tarefas){

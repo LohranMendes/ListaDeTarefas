@@ -24,6 +24,11 @@
                         </div>
                     </div>
                     <span class="text-dark px-2 text-decoration-underline">Obs: o número de tarefas é limitado a 10.</span>
+                    @if(session('error'))
+                        <div class="alert alert-danger col-md-9 w-100 mt-3">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                 </div>
                 <div class="col d-flex col-md-8 mt-3 mb-3 px-2">
                     <table class="table table-hover table-bordered" id="tabela">
@@ -39,7 +44,11 @@
                             <?php $i = 0 ?>
                             @foreach($tarefas as $tarefa)
                             <tr style="height: 60px">
-                                <td>{{ $tarefa->status }}</td>
+                                @if($tarefa->status == 0)
+                                    <td>Em andamento</td>
+                                @else
+                                    <td>Concluído</td>
+                                @endif
                                 <td>{{ $tarefa->nome }}</td>
                                 <td>{{ $tarefa->tempo }}</td>
                                 <td class="d-flex justify-content-center">
