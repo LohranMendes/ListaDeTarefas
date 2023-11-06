@@ -4,26 +4,22 @@
 @section('content')
     <div class="full-height-index">
         <div class="container-fluid">
-            <div class="d-flex justify-content-center align-items-center">
-                @if(session('error'))
-                    <div class="alert alert-danger col-md-5 mt-3">
-                        {{ session('error') }}
-                    </div>
-                @endif
-            </div>
-            <div class="d-flex justify-content-center align-items-center">
-                @if(session('sucess'))
-                    <div class="alert alert-success col-md-5 mt-3">
-                        {{ session('sucess') }}
-                    </div>
-                @endif
-            </div>
             <div class="d-flex justify-content-between mt-3">
                 <div class="d-flex px-2">
                     <div class="cor-site rounded-pill mr-2 px-1" style="display: inline-block;"></div>
                     <h5 class="font-weight-bolder">Minhas Listas</h5>
                 </div>
-                <div class="d-flex px-2">
+                @if(session('error'))
+                    <div class="alert alert-danger col-md-5">
+                        {{ session('error') }}
+                    </div>
+                @endif
+                @if(session('sucess'))
+                    <div class="alert alert-success col-md-5">
+                        {{ session('sucess') }}
+                    </div>
+                @endif
+                <div class="d-flex px-2 h-50">
                     <a href="{{route('criaLista')}}" class="btn btn-dark">Criar Lista</a>
                 </div>
             </div>

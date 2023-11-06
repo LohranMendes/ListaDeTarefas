@@ -74,6 +74,10 @@ class TarefasController extends Controller
 
     public function listaPost(Request $request){
 
+        if($request->titulo == ''){
+            return redirect()->intended(route('criaLista'))->with('error', 'Ocorreu um erro na criação da lista. Tente novamente.');
+        }
+
         $request->validate([
             "titulo" => 'required',
             "data"=>  'nullable'
